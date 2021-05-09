@@ -72,7 +72,7 @@ def test(args, model, test_loader):
 def main():
     # Training settings
     parser = argparse.ArgumentParser(description='CDAN SVHN MNIST')
-    parser.add_argument('method', type=str, default='CDAN-E', choices=['CDAN', 'CDAN-E', 'DANN'])
+    parser.add_argument('--method', type=str, default='CDAN-E', choices=['CDAN', 'CDAN-E', 'DANN'])
     parser.add_argument('--task', default='USPS2MNIST', help='task to perform')
     parser.add_argument('--batch_size', type=int, default=64,
                         help='input batch size for training (default: 64)')

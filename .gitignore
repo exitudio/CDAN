@@ -103,3 +103,8 @@ tensorflow/snapshot/*
 *.png
 *.tar.gz
 *.pth.tar
+
+*-ubyte
+*-ubyte.gz
+*.pt
+*.mat

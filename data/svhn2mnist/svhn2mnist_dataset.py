@@ -4,10 +4,10 @@ import os
 from PIL import Image
 import torch
 
-mnist_dataset = datasets.MNIST('../data/mnist', train=True, transform=None, 
-                               target_transform=None)
-svhn_dataset = datasets.SVHN('../data/svhn', split='train', transform=None, 
-                             target_transform=None)
+mnist_dataset = datasets.MNIST('../data', train=True, transform=None, 
+                               target_transform=None, download=True)
+svhn_dataset = datasets.SVHN('../data', split='train', transform=None, 
+                             target_transform=None, download=True)
 outdir = '../data/svhn2mnist'
 
 mnist_train_image = osp.join(outdir, 'mnist_train_image')
@@ -22,7 +22,7 @@ with open(osp.join(outdir, 'mnist_train.txt'), 'w') as label_file:
 
 mnist_test_image = osp.join(outdir, 'mnist_test_image')
 os.system("mkdir -p " + mnist_test_image)
-mnist_test_set = torch.load("/home/large_dataset/caozhangjie/cdan/data/mnist/processed/test.pt")
+mnist_test_set = torch.load("../data/MNIST/processed/test.pt")
 with open(osp.join(outdir, 'mnist_test.txt'), 'w') as label_file:
     for i in range(mnist_test_set[0].size(0)):
         img = Image.fromarray(mnist_test_set[0][i, :, :].numpy())
