@@ -4,6 +4,11 @@ Office home
 $cd pytorch
 $python3 train_image.py --gpu_id 0 --net ResNet50 --dset office-home --test_interval 2000 --s_dset_path ../data/office-home/Art.txt --t_dset_path ../data/office-home/Clipart.txt
 ```
+svhn
+```
+$cd pytorch
+$python3 train_svhnmnist.py --gpu_id 0 --epochs 50
+```
 
 
 # CDAN

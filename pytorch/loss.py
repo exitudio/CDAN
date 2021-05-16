@@ -22,6 +22,7 @@ def CDAN(input_list, ad_net, entropy=None, coeff=None, random_layer=None):
     softmax_output = input_list[1].detach()
     feature = input_list[0]
     if random_layer is None:
+        # print('softmax feature:', softmax_output.shape, feature.shape, softmax_output.unsqueeze(2).shape, feature.unsqueeze(1).shape)
         op_out = torch.bmm(softmax_output.unsqueeze(2), feature.unsqueeze(1))
         ad_out = ad_net(op_out.view(-1, softmax_output.size(1) * feature.size(1)))
     else:

@@ -1,3 +1,4 @@
+import tensorflow as tf
 import argparse
 import torch
 import torch.nn as nn
@@ -10,6 +11,8 @@ from torch.autograd import Variable
 import loss as loss_func
 import numpy as np
 import network
+from torch import utils
+summary_writer = tf.summary.create_file_writer('./logs/svhnmnist')
 
 def train(args, model, ad_net, random_layer, train_loader, train_loader1, optimizer, optimizer_ad, epoch, start_epoch, method):
     model.train()
@@ -29,6 +32,8 @@ def train(args, model, ad_net, random_layer, train_loader, train_loader1, optimi
         data_source, label_source = data_source.cuda(), label_source.cuda()
         data_target, label_target = iter_target.next()
         data_target = data_target.cuda()
+        print('data_source:', data_source.shape, data_target.shape)
+
         optimizer.zero_grad()
         optimizer_ad.zero_grad()
         feature, output = model(torch.cat((data_source, data_target), 0))
@@ -68,6 +73,7 @@ def test(args, model, test_loader):
     print('\nTest set: Average loss: {:.4f}, Accuracy: {}/{} ({:.0f}%)\n'.format(
         test_loss, correct, len(test_loader.dataset),
         100. * correct / len(test_loader.dataset)))
+    return correct / len(test_loader.dataset)
 
 def main():
     # Training settings
@@ -131,6 +137,7 @@ def main():
         random_layer.cuda()
     else:
         random_layer = None
+        print('aaa:', model.output_num(), class_num)
         ad_net = network.AdversarialNetwork(model.output_num() * class_num, 500)
     ad_net = ad_net.cuda()
     optimizer = optim.SGD(model.parameters(), lr=args.lr, weight_decay=0.0005, momentum=0.9)
@@ -141,7 +148,9 @@ def main():
             for param_group in optimizer.param_groups:
                 param_group["lr"] = param_group["lr"] * 0.3
         train(args, model, ad_net, random_layer, train_loader, train_loader1, optimizer, optimizer_ad, epoch, 0, args.method)
-        test(args, model, test_loader)
+        acc = test(args, model, test_loader)
+        with summary_writer.as_default():
+            tf.summary.scalar("acc", acc, step=epoch)
 
 if __name__ == '__main__':
     main()
